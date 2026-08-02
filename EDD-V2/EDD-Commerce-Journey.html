@@ -1,0 +1,1963 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <link rel="icon" href="data:," />
+  <title>EDD - One Promise Across the Commerce Journey</title>
+  <script>document.documentElement.classList.add("js");</script>
+  <style>
+    @font-face {
+      font-family: "Carbon";
+      src: url("./assets/Carbon-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --paper: #f7f7f4;
+      --white: #ffffff;
+      --ink: #111315;
+      --muted: #687078;
+      --quiet: #eff1ee;
+      --rule: #d9dcd8;
+      --teal: #179f9b;
+      --teal-dark: #08716e;
+      --teal-soft: #e6f8f6;
+      --purple: #6425ed;
+      --purple-soft: #f1edff;
+      --red: #e52b2f;
+      --display: "Avenir Next", "Helvetica Neue", Helvetica, sans-serif;
+      --mono: "Carbon", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--paper);
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: 17px;
+      line-height: 1.5;
+      letter-spacing: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 3px;
+    }
+
+    a {
+      color: inherit;
+      text-underline-offset: 4px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .shell {
+      width: min(1320px, calc(100% - 64px));
+      margin: 0 auto;
+    }
+
+    .mono,
+    .eyebrow,
+    .stage-number,
+    .stage-role,
+    .screen-label,
+    .journey-nav small,
+    .price,
+    .edd-label,
+    .option-meta,
+    .internal-note,
+    .track-environment,
+    .footer-label {
+      font-family: var(--mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .masthead {
+      position: relative;
+      z-index: 30;
+      display: flex;
+      min-height: 72px;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--ink);
+      background: var(--paper);
+      font-size: 13px;
+    }
+
+    .masthead strong {
+      font-family: var(--mono);
+      text-transform: uppercase;
+    }
+
+    .masthead-context {
+      color: var(--muted);
+    }
+
+    .masthead-right,
+    .page-tabs {
+      display: flex;
+      align-items: center;
+    }
+
+    .masthead-right {
+      gap: 24px;
+    }
+
+    .page-tabs {
+      align-self: stretch;
+      border-right: 1px solid var(--rule);
+      border-left: 1px solid var(--rule);
+    }
+
+    .page-tabs a,
+    .page-tabs span {
+      display: flex;
+      min-height: 40px;
+      align-items: center;
+      padding: 0 16px;
+      font-family: var(--mono);
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .page-tabs > * + * {
+      border-left: 1px solid var(--rule);
+    }
+
+    .page-tabs .is-active {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .page-tabs a:hover {
+      color: var(--ink);
+    }
+
+    .intro {
+      padding: 88px 0 56px;
+      background: var(--paper);
+    }
+
+    .eyebrow {
+      margin-bottom: 24px;
+      color: var(--teal-dark);
+      font-size: 15px;
+    }
+
+    .intro h1 {
+      max-width: 1080px;
+      margin-bottom: 28px;
+      font-size: clamp(58px, 7.4vw, 112px);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: 0;
+    }
+
+    .intro-copy {
+      max-width: 820px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: clamp(21px, 2vw, 28px);
+      line-height: 1.38;
+    }
+
+    .journey-nav-wrap {
+      position: sticky;
+      z-index: 25;
+      top: 0;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      background: rgba(247, 247, 244, 0.96);
+      backdrop-filter: blur(12px);
+    }
+
+    .journey-nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .journey-nav a {
+      position: relative;
+      min-height: 86px;
+      padding: 18px 22px;
+      text-decoration: none;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .journey-nav a + a {
+      border-left: 1px solid var(--rule);
+    }
+
+    .journey-nav a::after {
+      position: absolute;
+      right: 0;
+      bottom: -1px;
+      left: 0;
+      height: 4px;
+      background: transparent;
+      content: "";
+    }
+
+    .journey-nav a.is-active {
+      background: var(--white);
+    }
+
+    .journey-nav a.is-active::after {
+      background: var(--teal);
+    }
+
+    .journey-nav small {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .journey-nav strong {
+      display: block;
+      font-size: 17px;
+      font-weight: 650;
+    }
+
+    .stage {
+      padding: 112px 0 120px;
+      border-bottom: 1px solid var(--ink);
+      scroll-margin-top: 88px;
+    }
+
+    .stage:nth-of-type(even) {
+      background: var(--white);
+    }
+
+    .stage-head {
+      display: grid;
+      grid-template-columns: 168px minmax(0, 1fr) minmax(260px, 380px);
+      gap: 48px;
+      align-items: start;
+      margin-bottom: 56px;
+    }
+
+    .stage-index {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stage-number {
+      display: grid;
+      width: 52px;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      font-size: 12px;
+    }
+
+    .stage-role {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .stage-head h2 {
+      max-width: 720px;
+      margin-bottom: 0;
+      font-size: clamp(42px, 5vw, 70px);
+      font-weight: 700;
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .stage-head > p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.5;
+    }
+
+    .screen-frame {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--ink);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .screen-label {
+      position: absolute;
+      z-index: 10;
+      top: 16px;
+      right: 16px;
+      padding: 8px 10px;
+      border: 1px solid var(--ink);
+      background: var(--white);
+      font-size: 10px;
+    }
+
+    .storebar {
+      display: grid;
+      min-height: 76px;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 38px;
+      align-items: center;
+      padding: 0 32px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .merchant-brand {
+      color: var(--teal);
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .store-nav {
+      display: flex;
+      gap: 26px;
+      justify-content: center;
+      color: #373d43;
+      font-size: 13px;
+    }
+
+    .store-tools {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .pdp-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.14fr) minmax(380px, 0.86fr);
+      min-height: 690px;
+    }
+
+    .product-media {
+      display: grid;
+      min-width: 0;
+      place-items: center;
+      padding: 48px;
+      border-right: 1px solid var(--rule);
+      background: #fbfbf9;
+    }
+
+    .product-media img {
+      display: block;
+      width: min(100%, 760px);
+      height: auto;
+      max-height: 580px;
+      object-fit: contain;
+    }
+
+    .product-info {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      padding: 54px 42px 38px;
+    }
+
+    .breadcrumb {
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .product-info h3 {
+      max-width: 430px;
+      margin-bottom: 10px;
+      font-size: clamp(34px, 3.4vw, 52px);
+      font-weight: 700;
+      line-height: 0.98;
+    }
+
+    .price {
+      display: block;
+      margin-bottom: 26px;
+      font-size: 26px;
+    }
+
+    .product-summary {
+      margin-bottom: 28px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .control-label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: 650;
+      text-transform: uppercase;
+    }
+
+    .swatches {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .swatch {
+      width: 42px;
+      aspect-ratio: 1;
+      padding: 0;
+      border: 1px solid #aeb3b0;
+      border-radius: 50%;
+      background: #222426;
+      cursor: pointer;
+    }
+
+    .swatch:nth-child(2) {
+      background: #a5a096;
+    }
+
+    .swatch:nth-child(3) {
+      background: #59685e;
+    }
+
+    .swatch[aria-pressed="true"] {
+      box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--ink);
+    }
+
+    .purchase-row {
+      display: grid;
+      grid-template-columns: 128px minmax(0, 1fr);
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .quantity {
+      display: grid;
+      grid-template-columns: 40px 1fr 40px;
+      min-height: 56px;
+      border: 1px solid var(--ink);
+    }
+
+    .quantity button {
+      border: 0;
+      background: var(--white);
+      cursor: pointer;
+      font-size: 22px;
+    }
+
+    .quantity output {
+      display: grid;
+      place-items: center;
+      border-right: 1px solid var(--rule);
+      border-left: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 14px;
+    }
+
+    .primary-action {
+      min-height: 56px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--white);
+      cursor: pointer;
+      font-weight: 650;
+      transition: background 160ms ease, color 160ms ease;
+    }
+
+    .primary-action:hover {
+      background: var(--teal-dark);
+      border-color: var(--teal-dark);
+    }
+
+    .edd-block {
+      margin: 30px 0 24px;
+      padding: 18px 20px;
+      border: 1px solid var(--teal-dark);
+      background: var(--teal-soft);
+    }
+
+    .edd-block-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 9px;
+    }
+
+    .edd-label {
+      color: var(--teal-dark);
+      font-size: 10px;
+    }
+
+    .confidence {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--teal-dark);
+      font-size: 11px;
+    }
+
+    .confidence::before {
+      width: 7px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--teal);
+      content: "";
+    }
+
+    .edd-block strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .edd-block p {
+      margin: 0;
+      color: #3d6865;
+      font-size: 13px;
+    }
+
+    .experience-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 24px;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .experience-strip > div {
+      min-height: 112px;
+      padding: 22px 24px;
+    }
+
+    .experience-strip > div + div {
+      border-left: 1px solid var(--rule);
+    }
+
+    .experience-strip strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .experience-strip p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .checkout-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(350px, 0.85fr);
+      min-height: 690px;
+    }
+
+    .checkout-main {
+      padding: 50px;
+      border-right: 1px solid var(--rule);
+    }
+
+    .checkout-main h3 {
+      margin-bottom: 8px;
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .checkout-main > p {
+      margin-bottom: 34px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .address-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 18px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      font-size: 14px;
+    }
+
+    .address-line span {
+      color: var(--muted);
+    }
+
+    .shipping-title {
+      margin: 36px 0 14px;
+      font-size: 14px;
+      font-weight: 650;
+      text-transform: uppercase;
+    }
+
+    .delivery-option {
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: start;
+      width: 100%;
+      min-height: 100px;
+      padding: 20px;
+      border: 1px solid var(--rule);
+      background: var(--white);
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .delivery-option + .delivery-option {
+      margin-top: 10px;
+    }
+
+    .delivery-option[aria-pressed="true"] {
+      border-color: var(--ink);
+      box-shadow: inset 4px 0 0 var(--teal);
+    }
+
+    .delivery-radio {
+      position: relative;
+      width: 18px;
+      aspect-ratio: 1;
+      margin-top: 3px;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+    }
+
+    .delivery-option[aria-pressed="true"] .delivery-radio::after {
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: var(--ink);
+      content: "";
+    }
+
+    .delivery-option strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .delivery-date {
+      display: block;
+      margin-top: 5px;
+      color: var(--teal-dark);
+      font-weight: 650;
+    }
+
+    .option-meta {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .delivery-price {
+      white-space: nowrap;
+      font-family: var(--mono);
+      font-size: 15px;
+    }
+
+    .quote-note {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .internal-note {
+      color: var(--teal-dark);
+      font-size: 9px;
+    }
+
+    .checkout-summary {
+      display: flex;
+      flex-direction: column;
+      padding: 50px 38px;
+      background: #f2f3f0;
+    }
+
+    .summary-product {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .summary-product img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: contain;
+      background: var(--white);
+    }
+
+    .summary-product strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    .summary-product span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .summary-lines {
+      margin-top: 24px;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 9px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .summary-line.total {
+      margin-top: 14px;
+      padding-top: 20px;
+      border-top: 1px solid var(--ink);
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .checkout-action {
+      margin-top: auto;
+      min-height: 58px;
+      border: 0;
+      background: var(--ink);
+      color: var(--white);
+      font-weight: 650;
+    }
+
+    .plumbing {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 28px;
+      padding: 18px 20px;
+      border: 1px solid var(--rule);
+      background: var(--white);
+    }
+
+    .plumbing span {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    .plumbing b {
+      color: var(--teal-dark);
+      font-weight: 600;
+    }
+
+    .track-app {
+      min-height: 650px;
+      color: #273246;
+    }
+
+    .track-topbar {
+      display: grid;
+      min-height: 70px;
+      grid-template-columns: minmax(260px, 1fr) auto auto;
+      gap: 32px;
+      align-items: center;
+      padding: 0 28px;
+      border-bottom: 1px solid #dbe0e5;
+    }
+
+    .track-environment {
+      padding: 8px 34px;
+      border-radius: 0 0 8px 8px;
+      background: #d72b1f;
+      color: var(--white);
+      font-size: 10px;
+      text-align: center;
+    }
+
+    .track-nav {
+      display: flex;
+      gap: 28px;
+      font-size: 13px;
+    }
+
+    .track-nav strong {
+      color: var(--ink);
+    }
+
+    .track-context {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 32px;
+      border-bottom: 1px solid #dbe0e5;
+      background: #fafbfb;
+    }
+
+    .track-context h3 {
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .track-context p {
+      margin: 0;
+      color: #60708b;
+      font-size: 13px;
+    }
+
+    .track-filter {
+      padding: 10px 14px;
+      border: 1px solid #b9c2cd;
+      background: var(--white);
+      color: #53647c;
+      font-size: 12px;
+    }
+
+    .orders {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+
+    .orders th {
+      padding: 15px 12px;
+      border-bottom: 1px solid #dbe0e5;
+      color: #6b7a8f;
+      font-family: var(--mono);
+      font-size: 9px;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    .orders td {
+      padding: 22px 12px;
+      border-bottom: 1px solid #e1e5e9;
+      vertical-align: middle;
+    }
+
+    .orders tr.featured {
+      background: #f4fffd;
+      box-shadow: inset 4px 0 0 var(--teal);
+    }
+
+    .orders td:first-child,
+    .orders th:first-child {
+      padding-left: 28px;
+    }
+
+    .orders a {
+      color: var(--purple);
+      text-decoration: none;
+    }
+
+    .status-tag {
+      display: inline-block;
+      min-width: 88px;
+      padding: 7px 12px;
+      border: 1px solid var(--teal);
+      border-radius: 18px;
+      background: var(--teal-soft);
+      color: var(--teal-dark);
+      text-align: center;
+    }
+
+    .carrier {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .carrier-logo {
+      display: grid;
+      width: 28px;
+      aspect-ratio: 1;
+      place-items: center;
+      border-radius: 3px;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+
+    .promised-date {
+      color: var(--teal-dark);
+      font-weight: 700;
+    }
+
+    .track-legend {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 18px 28px;
+      color: #65758a;
+      font-size: 11px;
+    }
+
+    .track-legend strong {
+      color: var(--teal-dark);
+    }
+
+    .tracking-app {
+      min-height: 760px;
+      background: #f6f7f8;
+      color: #2b3444;
+    }
+
+    .tracking-brandbar {
+      min-height: 88px;
+      padding: 24px 46px;
+      border-bottom: 1px solid #d8dce1;
+      background: var(--white);
+    }
+
+    .tracking-card {
+      width: calc(100% - 96px);
+      margin: 28px auto;
+      overflow: hidden;
+      border: 1px solid #cdd4dd;
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .tracking-summary {
+      padding: 30px 32px 26px;
+    }
+
+    .tracking-summary > span {
+      color: #58728f;
+      font-size: 14px;
+    }
+
+    .tracking-summary h3 {
+      margin: 4px 0 32px;
+      font-size: 34px;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .tracking-progress {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      margin-bottom: 34px;
+    }
+
+    .tracking-progress::before,
+    .tracking-progress::after {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      height: 4px;
+      content: "";
+    }
+
+    .tracking-progress::before {
+      right: 8px;
+      background: #dbe0e6;
+    }
+
+    .tracking-progress::after {
+      width: calc(50% - 8px);
+      background: var(--purple);
+    }
+
+    .progress-dot {
+      position: relative;
+      z-index: 2;
+      width: 18px;
+      aspect-ratio: 1;
+      justify-self: start;
+      border: 1px solid #a5b5c8;
+      border-radius: 50%;
+      background: var(--white);
+    }
+
+    .progress-dot.done {
+      border-color: var(--purple);
+    }
+
+    .progress-dot.current {
+      width: 24px;
+      margin-top: -3px;
+      border: 0;
+      background: var(--purple);
+    }
+
+    .tracking-status {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+    }
+
+    .tracking-status h4 {
+      margin: 0 0 5px;
+      font-size: 22px;
+    }
+
+    .tracking-status p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .tracking-status .carrier-name {
+      color: #58728f;
+      font-size: 18px;
+    }
+
+    .updates-button {
+      min-height: 44px;
+      margin-top: 24px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--purple);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .tracking-updates {
+      display: none;
+      margin-top: 14px;
+      padding-top: 16px;
+      border-top: 1px solid #e0e3e7;
+      color: #667587;
+      font-size: 13px;
+    }
+
+    .tracking-updates.is-open {
+      display: block;
+    }
+
+    .tracking-map {
+      position: relative;
+      height: 280px;
+      overflow: hidden;
+      border-top: 1px solid #d7dbe0;
+      background-color: #d5d5da;
+      background-image:
+        linear-gradient(28deg, transparent 48%, rgba(255,255,255,0.9) 49%, rgba(255,255,255,0.9) 51%, transparent 52%),
+        linear-gradient(92deg, transparent 48%, rgba(255,255,255,0.75) 49%, rgba(255,255,255,0.75) 51%, transparent 52%),
+        linear-gradient(152deg, transparent 48%, rgba(255,255,255,0.75) 49%, rgba(255,255,255,0.75) 51%, transparent 52%);
+      background-size: 150px 90px, 110px 140px, 180px 120px;
+    }
+
+    .tracking-map::before {
+      position: absolute;
+      top: 62%;
+      left: 32%;
+      width: 42%;
+      height: 5px;
+      border-radius: 4px;
+      background: rgba(100, 37, 237, 0.5);
+      content: "";
+      transform: rotate(21deg);
+      transform-origin: left center;
+    }
+
+    .map-pin {
+      position: absolute;
+      top: 18%;
+      left: 29%;
+      width: 34px;
+      height: 42px;
+      border: 6px solid var(--purple);
+      border-radius: 50% 50% 50% 0;
+      background: var(--white);
+      transform: rotate(-45deg);
+    }
+
+    .map-destination {
+      position: absolute;
+      right: 22%;
+      bottom: 13%;
+      width: 74px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: rgba(100, 37, 237, 0.24);
+    }
+
+    .journey-outcome {
+      padding: 112px 0;
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .journey-outcome-grid {
+      display: grid;
+      grid-template-columns: 168px minmax(0, 1fr);
+      gap: 48px;
+    }
+
+    .journey-outcome .eyebrow {
+      color: #9da4a9;
+    }
+
+    .journey-outcome h2 {
+      max-width: 1000px;
+      margin-bottom: 48px;
+      font-size: clamp(52px, 7vw, 96px);
+      font-weight: 700;
+      line-height: 0.94;
+    }
+
+    .outcome-lines {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid #4d5255;
+    }
+
+    .outcome-lines div {
+      padding: 24px 22px 0 0;
+    }
+
+    .outcome-lines div + div {
+      padding-left: 22px;
+      border-left: 1px solid #4d5255;
+    }
+
+    .outcome-lines strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 16px;
+    }
+
+    .outcome-lines p {
+      margin: 0;
+      color: #aeb3b6;
+      font-size: 13px;
+    }
+
+    .sources {
+      display: grid;
+      grid-template-columns: 168px minmax(0, 1fr);
+      gap: 48px;
+      padding: 38px 0 64px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer-label {
+      color: var(--ink);
+      font-size: 11px;
+    }
+
+    .source-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 24px;
+    }
+
+    .illustrative-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 620ms ease, transform 620ms ease;
+    }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 1080px) {
+      .stage-head {
+        grid-template-columns: 130px minmax(0, 1fr);
+      }
+
+      .stage-head > p {
+        grid-column: 2;
+      }
+
+      .pdp-grid,
+      .checkout-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .product-media,
+      .checkout-main {
+        border-right: 0;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .product-media {
+        min-height: 520px;
+      }
+
+      .product-info {
+        min-height: 650px;
+      }
+
+      .checkout-summary {
+        min-height: 420px;
+      }
+
+      .orders {
+        font-size: 11px;
+      }
+
+      .outcome-lines {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .outcome-lines div:nth-child(3) {
+        padding-left: 0;
+        border-left: 0;
+      }
+
+      .outcome-lines div:nth-child(n+3) {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #4d5255;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        font-size: 16px;
+      }
+
+      .shell {
+        width: calc(100% - 32px);
+      }
+
+      .masthead {
+        min-height: 62px;
+        font-size: 11px;
+      }
+
+      .masthead-context {
+        display: none;
+      }
+
+      .masthead-right {
+        gap: 0;
+      }
+
+      .page-tabs a,
+      .page-tabs span {
+        min-height: 38px;
+        padding: 0 10px;
+        font-size: 9px;
+        white-space: nowrap;
+      }
+
+      .intro {
+        padding: 64px 0 40px;
+      }
+
+      .intro h1 {
+        font-size: clamp(48px, 14vw, 70px);
+      }
+
+      .intro-copy {
+        font-size: 19px;
+      }
+
+      .journey-nav-wrap {
+        overflow-x: auto;
+      }
+
+      .journey-nav {
+        width: 640px;
+      }
+
+      .journey-nav a {
+        min-height: 72px;
+        padding: 14px 16px;
+      }
+
+      .stage {
+        padding: 72px 0 80px;
+        scroll-margin-top: 74px;
+      }
+
+      .stage-head {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-bottom: 36px;
+      }
+
+      .stage-head > p {
+        grid-column: 1;
+      }
+
+      .stage-head h2 {
+        font-size: clamp(40px, 11vw, 56px);
+      }
+
+      .storebar {
+        min-height: 64px;
+        grid-template-columns: 1fr auto;
+        padding: 0 18px;
+      }
+
+      .merchant-brand {
+        font-size: 22px;
+      }
+
+      .store-nav {
+        display: none;
+      }
+
+      .store-tools span:first-child {
+        display: none;
+      }
+
+      .screen-label {
+        top: 74px;
+        right: 12px;
+      }
+
+      .product-media {
+        min-height: 360px;
+        padding: 40px 20px 20px;
+      }
+
+      .product-media img {
+        max-height: 310px;
+      }
+
+      .product-info,
+      .checkout-main,
+      .checkout-summary {
+        min-height: 0;
+        padding: 32px 22px;
+      }
+
+      .product-info h3 {
+        font-size: 38px;
+      }
+
+      .purchase-row {
+        grid-template-columns: 1fr;
+      }
+
+      .experience-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .experience-strip > div + div {
+        border-top: 1px solid var(--rule);
+        border-left: 0;
+      }
+
+      .checkout-shell {
+        min-height: 0;
+      }
+
+      .checkout-summary {
+        gap: 30px;
+      }
+
+      .checkout-action {
+        min-height: 56px;
+      }
+
+      .track-topbar {
+        grid-template-columns: 1fr auto;
+        padding: 0 18px;
+      }
+
+      .track-environment {
+        display: none;
+      }
+
+      .track-nav span:not(:nth-child(3)) {
+        display: none;
+      }
+
+      .track-context {
+        display: block;
+        padding: 24px 18px;
+      }
+
+      .track-filter {
+        margin-top: 18px;
+      }
+
+      .orders,
+      .orders tbody,
+      .orders tr,
+      .orders td {
+        display: block;
+        width: 100%;
+      }
+
+      .orders thead {
+        display: none;
+      }
+
+      .orders tr {
+        padding: 20px 18px;
+        border-bottom: 1px solid #dbe0e5;
+      }
+
+      .orders tr:not(.featured) {
+        display: none;
+      }
+
+      .orders td,
+      .orders td:first-child {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 12px;
+        padding: 7px 0;
+        border-bottom: 0;
+        font-size: 13px;
+      }
+
+      .orders td::before {
+        color: #6b7a8f;
+        font-family: var(--mono);
+        font-size: 9px;
+        text-transform: uppercase;
+      }
+
+      .orders td:nth-child(1)::before { content: "Order"; }
+      .orders td:nth-child(2)::before { content: "Status"; }
+      .orders td:nth-child(3)::before { content: "Recipient"; }
+      .orders td:nth-child(4)::before { content: "Carrier"; }
+      .orders td:nth-child(5)::before { content: "Promise"; }
+
+      .track-legend {
+        display: block;
+      }
+
+      .track-legend span {
+        display: block;
+        margin-top: 5px;
+      }
+
+      .tracking-brandbar {
+        min-height: 72px;
+        padding: 20px 24px;
+      }
+
+      .tracking-card {
+        width: calc(100% - 24px);
+        margin: 12px auto;
+      }
+
+      .tracking-summary {
+        padding: 24px 20px;
+      }
+
+      .tracking-summary h3 {
+        font-size: 28px;
+      }
+
+      .tracking-status {
+        grid-template-columns: 1fr;
+      }
+
+      .tracking-status .carrier-name {
+        font-size: 15px;
+      }
+
+      .tracking-map {
+        height: 240px;
+      }
+
+      .journey-outcome {
+        padding: 80px 0;
+      }
+
+      .journey-outcome-grid,
+      .sources {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .journey-outcome h2 {
+        font-size: clamp(48px, 13vw, 68px);
+      }
+
+      .outcome-lines {
+        grid-template-columns: 1fr;
+      }
+
+      .outcome-lines div,
+      .outcome-lines div + div,
+      .outcome-lines div:nth-child(3),
+      .outcome-lines div:nth-child(n+3) {
+        margin: 0;
+        padding: 20px 0;
+        border-top: 1px solid #4d5255;
+        border-left: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .js .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    @media print {
+      .journey-nav-wrap {
+        position: static;
+      }
+
+      .js .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .stage,
+      .screen-frame,
+      .journey-outcome {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead shell">
+    <strong>Shippit Demand</strong>
+    <div class="masthead-right">
+      <span class="masthead-context">EDD / Internal sales story</span>
+      <nav class="page-tabs" aria-label="EDD pages">
+        <a href="https://ashwinsharma-pm.github.io/EDD-V2/">Product update</a>
+        <span class="is-active" aria-current="page">Entire EDD journey</span>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro shell">
+      <p class="eyebrow">One underlying delivery promise</p>
+      <h1>One promise. Every customer moment.</h1>
+      <p class="intro-copy">
+        EDD starts before a buyer purchases, shapes the delivery choice at checkout, keeps the merchant aligned after fulfilment, and follows the recipient through delivery.
+      </p>
+    </section>
+
+    <nav class="journey-nav-wrap" aria-label="Commerce journey">
+      <div class="journey-nav shell">
+        <a class="is-active" href="#discover" data-stage="discover">
+          <small>01 / Buyer</small>
+          <strong>Discover</strong>
+        </a>
+        <a href="#choose" data-stage="choose">
+          <small>02 / Buyer</small>
+          <strong>Choose</strong>
+        </a>
+        <a href="#fulfil" data-stage="fulfil">
+          <small>03 / Merchant</small>
+          <strong>Fulfil</strong>
+        </a>
+        <a href="#receive" data-stage="receive">
+          <small>04 / Recipient</small>
+          <strong>Receive</strong>
+        </a>
+      </div>
+    </nav>
+
+    <section class="stage" id="discover" data-stage-section="discover">
+      <div class="shell">
+        <header class="stage-head reveal">
+          <div class="stage-index">
+            <span class="stage-number">01</span>
+            <span class="stage-role">Buyer</span>
+          </div>
+          <h2>The promise starts before purchase.</h2>
+          <p>EDD gives the buyer a delivery expectation while they are still deciding whether the product fits their needs.</p>
+        </header>
+
+        <div class="screen-frame reveal" aria-label="Illustrative Baby Bunting product page">
+          <span class="screen-label">Product detail page</span>
+          <div class="storebar">
+            <strong class="merchant-brand">BabyBunting</strong>
+            <nav class="store-nav" aria-label="Store categories">
+              <span>Prams</span><span>Car seats</span><span>Nursery</span><span>Clothing</span>
+            </nav>
+            <div class="store-tools"><span>Search</span><span>Bag (0)</span></div>
+          </div>
+
+          <div class="pdp-grid">
+            <div class="product-media">
+              <img src="./assets/edd-commerce-stroller.png" alt="Charcoal premium baby stroller" />
+            </div>
+
+            <div class="product-info">
+              <span class="breadcrumb">Home / Prams / Strollers</span>
+              <h3>AeroFold Everyday Stroller</h3>
+              <span class="price">$899.00</span>
+              <p class="product-summary">A compact full-size stroller with one-hand fold, all-terrain wheels and a reversible seat.</p>
+
+              <span class="control-label">Colour: Charcoal</span>
+              <div class="swatches" aria-label="Product colour">
+                <button class="swatch" type="button" aria-label="Charcoal" aria-pressed="true"></button>
+                <button class="swatch" type="button" aria-label="Stone" aria-pressed="false"></button>
+                <button class="swatch" type="button" aria-label="Sage" aria-pressed="false"></button>
+              </div>
+
+              <div class="edd-block">
+                <div class="edd-block-head">
+                  <span class="edd-label">Estimated delivery to 2005</span>
+                  <span class="confidence">High confidence</span>
+                </div>
+                <strong>Arrives Mon, 3 Aug</strong>
+                <p>Order within 3 hrs 24 mins.</p>
+              </div>
+
+              <div class="purchase-row">
+                <div class="quantity" aria-label="Quantity selector">
+                  <button type="button" data-quantity="decrease" aria-label="Decrease quantity">-</button>
+                  <output id="quantity">1</output>
+                  <button type="button" data-quantity="increase" aria-label="Increase quantity">+</button>
+                </div>
+                <button class="primary-action" type="button" id="add-to-bag">Add to bag</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="experience-strip reveal">
+          <div><strong>Moment</strong><p>The buyer is evaluating the product.</p></div>
+          <div><strong>EDD contribution</strong><p>A delivery date removes uncertainty before commitment.</p></div>
+          <div><strong>Experience</strong><p>The promise appears beside the buying action.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="choose" data-stage-section="choose">
+      <div class="shell">
+        <header class="stage-head reveal">
+          <div class="stage-index">
+            <span class="stage-number">02</span>
+            <span class="stage-role">Buyer</span>
+          </div>
+          <h2>The quote carries the same promise.</h2>
+          <p>V3 Quote API brings EDD into each shipping option, so price, service and delivery date can be chosen together.</p>
+        </header>
+
+        <div class="screen-frame reveal" aria-label="Illustrative Shopify checkout">
+          <span class="screen-label">Shopify checkout</span>
+          <div class="storebar">
+            <strong class="merchant-brand">BabyBunting</strong>
+            <span></span>
+            <div class="store-tools"><span>Secure checkout</span></div>
+          </div>
+
+          <div class="checkout-shell">
+            <div class="checkout-main">
+              <h3>Delivery</h3>
+              <p>Choose how you would like your order delivered.</p>
+
+              <div class="address-line">
+                <span>Ship to</span>
+                <strong>Alex Morgan, Sydney NSW 2005</strong>
+              </div>
+
+              <h4 class="shipping-title">Shipping method</h4>
+              <button class="delivery-option" type="button" aria-pressed="true">
+                <span class="delivery-radio" aria-hidden="true"></span>
+                <span>
+                  <strong>Standard delivery</strong>
+                  <span class="delivery-date">Arrives Mon, 3 Aug</span>
+                  <span class="option-meta">EDD / High confidence</span>
+                </span>
+                <span class="delivery-price">$9.95</span>
+              </button>
+              <button class="delivery-option" type="button" aria-pressed="false">
+                <span class="delivery-radio" aria-hidden="true"></span>
+                <span>
+                  <strong>Express delivery</strong>
+                  <span class="delivery-date">Arrives Fri, 31 Jul</span>
+                  <span class="option-meta">EDD / High confidence</span>
+                </span>
+                <span class="delivery-price">$19.95</span>
+              </button>
+
+              <div class="quote-note">
+                <span>Delivery dates are shown with each available quote.</span>
+                <span class="internal-note">V3 Quote API + EDD</span>
+              </div>
+            </div>
+
+            <aside class="checkout-summary">
+              <div class="summary-product">
+                <img src="./assets/edd-commerce-stroller.png" alt="AeroFold Everyday Stroller" />
+                <div><strong>AeroFold Everyday Stroller</strong><span>Charcoal / Qty 1</span></div>
+              </div>
+              <div class="summary-lines">
+                <div class="summary-line"><span>Subtotal</span><strong>$899.00</strong></div>
+                <div class="summary-line"><span>Shipping</span><strong id="summary-shipping">$9.95</strong></div>
+                <div class="summary-line total"><span>Total</span><strong id="summary-total">$908.95</strong></div>
+              </div>
+              <button class="checkout-action" type="button">Pay now</button>
+            </aside>
+          </div>
+        </div>
+
+        <div class="plumbing reveal" aria-label="EDD route into Shopify checkout">
+          <span>EDD</span><b>&rarr;</b><span>V3 Quote API</span><b>&rarr;</b><span>Shopify Connect</span><b>&rarr;</b><span>Shipping choice</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="fulfil" data-stage-section="fulfil">
+      <div class="shell">
+        <header class="stage-head reveal">
+          <div class="stage-index">
+            <span class="stage-number">03</span>
+            <span class="stage-role">Merchant</span>
+          </div>
+          <h2>The merchant sees what was promised.</h2>
+          <p>Once the order is in transit, Track keeps the delivery expectation visible beside the order, recipient and carrier.</p>
+        </header>
+
+        <div class="screen-frame reveal" aria-label="Illustrative Shippit Track page">
+          <span class="screen-label">Merchant Track page</span>
+          <div class="track-app">
+            <div class="track-topbar">
+              <strong class="merchant-brand">BabyBunting</strong>
+              <span class="track-environment">Production</span>
+              <nav class="track-nav"><span>New Orders</span><span>Ready to Ship</span><strong>Track</strong><span>Insights</span></nav>
+            </div>
+            <div class="track-context">
+              <div><h3>Track</h3><p>Orders in transit across your delivery network.</p></div>
+              <button class="track-filter" type="button">Status: In transit</button>
+            </div>
+
+            <table class="orders">
+              <thead>
+                <tr><th>Order</th><th>Status</th><th>Recipient</th><th>Carrier</th><th>Estimated delivery</th></tr>
+              </thead>
+              <tbody>
+                <tr class="featured">
+                  <td><a href="#receive">604488940B</a></td>
+                  <td><span class="status-tag">In transit</span></td>
+                  <td><strong>Alex Morgan</strong><br />Sydney, NSW</td>
+                  <td><span class="carrier"><span class="carrier-logo">P</span><span>eParcel<br />3649007786</span></span></td>
+                  <td><span class="promised-date">Mon 3 Aug</span></td>
+                </tr>
+                <tr>
+                  <td><a href="#fulfil">604488321B</a></td>
+                  <td><span class="status-tag">In transit</span></td>
+                  <td><strong>Jordan Lee</strong><br />Melbourne, VIC</td>
+                  <td><span class="carrier"><span class="carrier-logo">P</span><span>eParcel<br />3649007785</span></span></td>
+                  <td>Tue 4 Aug</td>
+                </tr>
+                <tr>
+                  <td><a href="#fulfil">604488692B</a></td>
+                  <td><span class="status-tag">In transit</span></td>
+                  <td><strong>Sam Taylor</strong><br />Perth, WA</td>
+                  <td><span class="carrier"><span class="carrier-logo">P</span><span>eParcel<br />3649007784</span></span></td>
+                  <td>Wed 5 Aug</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="track-legend"><strong>EDD keeps the original customer promise visible.</strong><span>Illustrative data only.</span></div>
+          </div>
+        </div>
+
+        <div class="experience-strip reveal">
+          <div><strong>Moment</strong><p>The order has moved from purchase into fulfilment.</p></div>
+          <div><strong>EDD contribution</strong><p>The merchant can see the expected delivery date operationally.</p></div>
+          <div><strong>Experience</strong><p>Buyer promise and merchant workflow stay aligned.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="receive" data-stage-section="receive">
+      <div class="shell">
+        <header class="stage-head reveal">
+          <div class="stage-index">
+            <span class="stage-number">04</span>
+            <span class="stage-role">Recipient</span>
+          </div>
+          <h2>The promise follows the package.</h2>
+          <p>The recipient sees the same arrival date after purchase, now supported by live tracking events and carrier progress.</p>
+        </header>
+
+        <div class="screen-frame reveal" aria-label="Illustrative recipient tracking page">
+          <span class="screen-label">Recipient tracking page</span>
+          <div class="tracking-app">
+            <div class="tracking-brandbar"><strong class="merchant-brand">BabyBunting</strong></div>
+            <div class="tracking-card">
+              <div class="tracking-summary">
+                <span>Your package</span>
+                <h3>Arrives Mon, 3 Aug</h3>
+
+                <div class="tracking-progress" aria-label="Shipment progress">
+                  <span class="progress-dot done"></span><span class="progress-dot done"></span><span class="progress-dot current"></span><span class="progress-dot"></span><span class="progress-dot"></span>
+                </div>
+
+                <div class="tracking-status">
+                  <div>
+                    <h4>On its way</h4>
+                    <p>Friday 31 July, 8:23PM AEST</p>
+                    <p><span class="carrier-logo" style="display:inline-grid;vertical-align:middle;margin-right:8px;">P</span>Chullora NSW</p>
+                  </div>
+                  <span class="carrier-name">eParcel</span>
+                </div>
+
+                <button class="updates-button" type="button" aria-expanded="false">See more updates +</button>
+                <div class="tracking-updates">
+                  <strong>Shipment received by carrier</strong><br />Friday 31 July, 5:16PM AEST
+                </div>
+              </div>
+
+              <div class="tracking-map" aria-label="Illustrative package route map">
+                <span class="map-pin" aria-hidden="true"></span>
+                <span class="map-destination" aria-hidden="true"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="experience-strip reveal">
+          <div><strong>Moment</strong><p>The recipient wants certainty after dispatch.</p></div>
+          <div><strong>EDD contribution</strong><p>The promised date remains the anchor for live tracking.</p></div>
+          <div><strong>Experience</strong><p>The journey ends with the same expectation it started with.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="journey-outcome">
+      <div class="journey-outcome-grid shell reveal">
+        <p class="eyebrow">The sales story</p>
+        <div>
+          <h2>EDD is not one checkout feature. It is the promise layer across commerce.</h2>
+          <div class="outcome-lines">
+            <div><strong>Discover</strong><p>Set the expectation while the buyer evaluates.</p></div>
+            <div><strong>Choose</strong><p>Attach the promise to each delivery quote.</p></div>
+            <div><strong>Fulfil</strong><p>Keep the merchant aligned to what was shown.</p></div>
+            <div><strong>Receive</strong><p>Carry the promise through recipient tracking.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sources shell">
+    <span class="footer-label">Context</span>
+    <div>
+      <div class="source-links">
+        <span>EDD V2</span><span>V3 Quote API</span><span>Shopify Connect</span><span>Track</span><span>Tracking page</span>
+      </div>
+      <p class="illustrative-note">Illustrative internal sales artifact. Product, buyer, order and tracking data are fictional. Baby Bunting interfaces are recreated from supplied internal references.</p>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const quantityOutput = document.getElementById("quantity");
+      const bagButton = document.getElementById("add-to-bag");
+      const swatches = document.querySelectorAll(".swatch");
+      const deliveryOptions = document.querySelectorAll(".delivery-option");
+      const shippingSummary = document.getElementById("summary-shipping");
+      const totalSummary = document.getElementById("summary-total");
+      const updatesButton = document.querySelector(".updates-button");
+      const updatesPanel = document.querySelector(".tracking-updates");
+      const navLinks = document.querySelectorAll(".journey-nav a");
+      const stages = document.querySelectorAll("[data-stage-section]");
+      const reveals = document.querySelectorAll(".reveal");
+
+      document.querySelectorAll("[data-quantity]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const current = Number(quantityOutput.value || quantityOutput.textContent);
+          const next = button.dataset.quantity === "increase" ? current + 1 : Math.max(1, current - 1);
+          quantityOutput.value = next;
+          quantityOutput.textContent = next;
+        });
+      });
+
+      bagButton.addEventListener("click", () => {
+        bagButton.textContent = "Added to bag";
+      });
+
+      swatches.forEach((swatch) => {
+        swatch.addEventListener("click", () => {
+          swatches.forEach((item) => item.setAttribute("aria-pressed", String(item === swatch)));
+        });
+      });
+
+      deliveryOptions.forEach((option, index) => {
+        option.addEventListener("click", () => {
+          deliveryOptions.forEach((item) => item.setAttribute("aria-pressed", String(item === option)));
+          shippingSummary.textContent = index === 0 ? "$9.95" : "$19.95";
+          totalSummary.textContent = index === 0 ? "$908.95" : "$918.95";
+        });
+      });
+
+      updatesButton.addEventListener("click", () => {
+        const isOpen = updatesPanel.classList.toggle("is-open");
+        updatesButton.setAttribute("aria-expanded", String(isOpen));
+        updatesButton.textContent = isOpen ? "Hide updates -" : "See more updates +";
+      });
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("is-visible");
+        });
+      }, { threshold: 0.12 });
+
+      reveals.forEach((item) => revealObserver.observe(item));
+
+      const stageObserver = new IntersectionObserver((entries) => {
+        const active = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (!active) return;
+        const current = active.target.dataset.stageSection;
+        navLinks.forEach((link) => link.classList.toggle("is-active", link.dataset.stage === current));
+      }, { rootMargin: "-20% 0px -55% 0px", threshold: [0, 0.2, 0.5] });
+
+      stages.forEach((stage) => stageObserver.observe(stage));
+    })();
+  </script>
+</body>
+</html>

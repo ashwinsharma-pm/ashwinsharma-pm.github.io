@@ -99,8 +99,49 @@
       text-transform: uppercase;
     }
 
-    .masthead span {
+    .masthead-context {
       color: var(--muted);
+    }
+
+    .masthead-right,
+    .page-tabs {
+      display: flex;
+      align-items: center;
+    }
+
+    .masthead-right {
+      gap: 24px;
+    }
+
+    .page-tabs {
+      align-self: stretch;
+      border-right: 1px solid var(--rule);
+      border-left: 1px solid var(--rule);
+    }
+
+    .page-tabs a,
+    .page-tabs span {
+      display: flex;
+      min-height: 40px;
+      align-items: center;
+      padding: 0 16px;
+      font-family: var(--display);
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .page-tabs > * + * {
+      border-left: 1px solid var(--rule);
+    }
+
+    .page-tabs .is-active {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .page-tabs a:hover {
+      color: var(--ink);
     }
 
     .hero {
@@ -595,8 +636,37 @@
 
     .next p {
       max-width: 720px;
-      margin-bottom: 0;
+      margin-bottom: 30px;
       color: var(--muted);
+    }
+
+    .journey-link {
+      display: flex;
+      width: min(100%, 720px);
+      min-height: 76px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 20px 24px;
+      border: 1px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: 20px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background 160ms ease, color 160ms ease;
+    }
+
+    .journey-link:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .journey-link-arrow {
+      flex: 0 0 auto;
+      font-size: 28px;
+      line-height: 1;
     }
 
     .sources {
@@ -704,9 +774,20 @@
         font-size: 11px;
       }
 
-      .masthead span {
-        max-width: 118px;
-        text-align: right;
+      .masthead-context {
+        display: none;
+      }
+
+      .masthead-right {
+        gap: 0;
+      }
+
+      .page-tabs a,
+      .page-tabs span {
+        min-height: 38px;
+        padding: 0 10px;
+        font-size: 9px;
+        white-space: nowrap;
       }
 
       .hero {
@@ -842,6 +923,12 @@
         padding: 64px 0;
       }
 
+      .journey-link {
+        min-height: 68px;
+        padding: 16px 18px;
+        font-size: 17px;
+      }
+
       .sources {
         padding-bottom: 48px;
       }
@@ -884,7 +971,13 @@
 <body>
   <header class="masthead shell">
     <strong>Shippit Demand</strong>
-    <span>EDD V2 / Internal update / July 2026</span>
+    <div class="masthead-right">
+      <span class="masthead-context">EDD V2 / Internal update / July 2026</span>
+      <nav class="page-tabs" aria-label="EDD pages">
+        <span class="is-active" aria-current="page">Product update</span>
+        <a href="./EDD-Commerce-Journey.html" target="_blank" rel="noopener">Entire EDD journey -&gt;</a>
+      </nav>
+    </div>
   </header>
 
   <main>
@@ -1180,6 +1273,10 @@
         <p>
           Product pages, checkout and tracking can draw from the same underlying promise. The experience becomes more consistent as each surface adopts it.
         </p>
+        <a class="journey-link" href="./EDD-Commerce-Journey.html" target="_blank" rel="noopener">
+          <span>Explore the entire EDD journey</span>
+          <span class="journey-link-arrow" aria-hidden="true">-&gt;</span>
+        </a>
       </div>
     </section>
   </main>
