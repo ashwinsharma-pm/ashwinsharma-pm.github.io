@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ashwin Sharma — Demand portfolio on the shipping journey</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --panel: #121820;
+    --line: #2a3544;
+    --text: #e8eef6;
+    --muted: #8b9bb0;
+    --accent: #6ee7b7;
+    --accent2: #93c5fd;
+    --accent3: #fbbf24;
+    --chip: #1a2330;
+    --quiet: #334155;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    background: radial-gradient(1200px 600px at 10% -10%, #132033 0%, var(--bg) 55%);
+    color: var(--text);
+    line-height: 1.45;
+  }
+  header {
+    padding: 40px 48px 16px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    max-width: 720px;
+    font-size: 15px;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .dot {
+    width: 10px; height: 10px; border-radius: 999px; display: inline-block;
+  }
+  .dot.announced { background: var(--accent); }
+  .dot.quiet { background: var(--accent3); }
+  .dot.platform { background: var(--accent2); }
+
+  .rail-wrap {
+    overflow-x: auto;
+    padding: 24px 48px 48px;
+  }
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(200px, 1fr));
+    gap: 0;
+    min-width: 1680px;
+    position: relative;
+  }
+  .rail::before {
+    content: "";
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    top: 36px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+    opacity: 0.55;
+    z-index: 0;
+  }
+  .stage {
+    position: relative;
+    z-index: 1;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .node {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 14px 12px;
+    min-height: 88px;
+  }
+  .node .n {
+    width: 28px; height: 28px; border-radius: 999px;
+    background: #0f172a;
+    border: 2px solid var(--accent);
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--accent);
+  }
+  .node h2 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .node .sub {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .cards { display: flex; flex-direction: column; gap: 8px; }
+  .card {
+    background: var(--chip);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 11px;
+    cursor: pointer;
+    transition: border-color .15s, transform .15s;
+  }
+  .card:hover { border-color: #4b6280; transform: translateY(-1px); }
+  .card.active { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(110,231,183,.25); }
+  .card .top {
+    display: flex; justify-content: space-between; gap: 8px; align-items: flex-start;
+  }
+  .card .name { font-size: 12.5px; font-weight: 600; }
+  .tag {
+    font-size: 9px; text-transform: uppercase; letter-spacing: .06em;
+    padding: 2px 6px; border-radius: 999px; white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .tag.a { color: var(--accent); border-color: #235f48; background: #0f2a20; }
+  .tag.q { color: var(--accent3); border-color: #6b5420; background: #2a210c; }
+  .tag.p { color: var(--accent2); border-color: #2a4a70; background: #0f1c2e; }
+  .card .impact {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .detail {
+    max-width: 1280px;
+    margin: 0 auto 56px;
+    padding: 0 48px;
+  }
+  .detail-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px 24px;
+    min-height: 120px;
+  }
+  .detail-panel.empty { color: var(--muted); font-size: 14px; }
+  .detail-panel h3 { margin: 0 0 6px; font-size: 18px; }
+  .detail-panel .meta { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+  .detail-panel .body { font-size: 14px; max-width: 820px; }
+  .detail-panel .body strong { color: var(--accent); font-weight: 600; }
+
+  footer {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 48px 48px;
+    color: var(--quiet);
+    font-size: 11px;
+  }
+  @media print {
+    body { background: #fff; color: #111; }
+    .card, .node, .detail-panel { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Demand portfolio on the shipping journey</h1>
+  <p>Ashwin Sharma · Principal PM, Demand · Shippit. Click a product to see how it lands on that step of the merchant → carrier → buyer flow. Announced Demand Updates vs quiet eng ships called out.</p>
+  <div class="legend">
+    <span><i class="dot announced"></i> Announced in #product-updates</span>
+    <span><i class="dot quiet"></i> Quiet ship (eng DMs)</span>
+    <span><i class="dot platform"></i> Platform / internal</span>
+    <span>~27 merchant-facing · last ~12 months</span>
+  </div>
+</header>
+
+<div class="rail-wrap">
+  <div class="rail" id="rail"></div>
+</div>
+
+<section class="detail">
+  <div class="detail-panel empty" id="detail">Click any product card on the journey to see the customer or company problem it hits at that node.</div>
+</section>
+
+<footer>
+  Journey stages follow Shippit’s order lifecycle (Connect → create → quote → allocate → pack/label → book → track/notify → protect). Built for portfolio walkthroughs — not a full product catalog.
+</footer>
+
+<script>
+const stages = [
+  {
+    id: 1, title: "Connect & ingest",
+    sub: "Orders enter Shippit from Shopify, PVX, Fluent, API",
+    items: [
+      { name: "Shopify product dimensions", kind: "a", when: "Sep 2025",
+        impact: "Dims metafields flow in so allocation isn’t weight-only.",
+        problem: "Shopify only sent dead weight → bad packs and misquotes on bulky light goods.",
+        solves: "Merchants sync L×W×H; volumetric + dead weight drive allocation and carrier cost accuracy." },
+      { name: "Order / product Tags sync", kind: "a", when: "Jul 2026",
+        impact: "Tags survive Connect and become first-class order data.",
+        problem: "Shopify tags dropped at the Connect boundary; ops manually triaged.",
+        solves: "Opt-in sync + API tags; chips/filters and Rules Engine routing." },
+      { name: "Exclude sync by order tag", kind: "a", when: "Aug 2026",
+        impact: "Some Shopify orders never become Shippit orders.",
+        problem: "Pre-order / wholesale / fraud / marketplace orders polluted the queue (CrankyHealth).",
+        solves: "Order-tag exclusion alongside product-tag exclusion." },
+      { name: "bin_location metafield", kind: "q", when: "Jun 2026",
+        impact: "Warehouse location arrives with the line item.",
+        problem: "Pickers needed shelf/bin on the slip; Beserk deal blocked.",
+        solves: "Variant metafield → Shippit for pick/pack (quiet Connect ship)." },
+      { name: "Email special-char validation", kind: "q", when: "2025",
+        impact: "Orders with odd emails still create.",
+        problem: "Strict email rules rejected apostrophes → sync failures.",
+        solves: "Updated validation so those orders don’t die at the gate." },
+      { name: "PVX On-Demand fields", kind: "a", when: "Oct 2025",
+        impact: "OD time windows survive PVX’s attribute limits.",
+        problem: "No native OD preference path in PVX → blocked Princess Polly–class deals.",
+        solves: "Structured string packing pickup/dropoff deadlines into Connect." },
+      { name: "Fluent scheduled On-Demand", kind: "a", when: "Apr 2026",
+        impact: "Scheduled OD orders ingest on Fluent.",
+        problem: "Fluent merchants needed scheduled, not only immediate OD.",
+        solves: "Scheduled On-Demand support live on Fluent Commerce." },
+    ]
+  },
+  {
+    id: 2, title: "Create & book UI",
+    sub: "New Orders / OSP — merchant decides how to book",
+    items: [
+      { name: "New Orders / OSP CTA clarity", kind: "a", when: "May 2026",
+        impact: "Create vs book is unambiguous.",
+        problem: "“Book” often only created the order — store teams thought they’d booked.",
+        solves: "Separate Add / Get quote and book / Create without booking / Book instantly." },
+      { name: "Re-book On-Demand", kind: "a", when: "Jan 2026",
+        impact: "Failed OD can re-enter booking without DOS.",
+        problem: "Failed/cancelled OD bookings were hard to recover in-product.",
+        solves: "In-product re-book path for On-Demand." },
+      { name: "In-app Plans page", kind: "a", when: "Sep 2025",
+        impact: "Pricing visible during onboarding (Shopify app).",
+        problem: "Plans lived only on the website; Shopify wanted app↔site parity.",
+        solves: "Native Plans page — first AI-built Demand release." },
+    ]
+  },
+  {
+    id: 3, title: "Quote",
+    sub: "Price + promise before allocation",
+    items: [
+      { name: "EDD (Quote API + checkout)", kind: "a", when: "Jul 2026",
+        impact: "Quote returns a real date/range, not “3 days”.",
+        problem: "Vague ETAs hurt trust at checkout and quoting.",
+        solves: "Confidence tiers; Quote API + Shopify Checkout powered by EDD." },
+      { name: "$0 quote error mapper", kind: "a", when: "Mar 2026",
+        impact: "Failed quotes explain what to fix.",
+        problem: "Raw carrier $0-quote errors were unusable.",
+        solves: "Plain-language rewrite for AusPost / CP / Allied via existing Quote API field." },
+    ]
+  },
+  {
+    id: 4, title: "Allocate & pack",
+    sub: "Rules → package allocation → satchels",
+    items: [
+      { name: "Tags → Rules Engine", kind: "a", when: "Jul 2026",
+        impact: "Subscription / DG / VIP auto-route.",
+        problem: "Couldn’t allocate by tag at all after Connect drop.",
+        solves: "Order/parcel/product tag conditions in Rules Engine." },
+      { name: "Dims-aware package allocation", kind: "a", when: "Sep 2025",
+        impact: "Pack choice uses volumetric reality.",
+        problem: "Weight-only allocation mis-sized parcels.",
+        solves: "Consider dimensions + weight in Package Allocation settings." },
+      { name: "AP 250g satchel", kind: "q", when: "May 2026",
+        impact: "Light AP product available as a pack option.",
+        problem: "Only 500g+ satchels; AP 250g missing.",
+        solves: "New satchel type, default-off so it doesn’t auto-steal allocation." },
+      { name: "SKU-level Transit Protection", kind: "a", when: "Apr 2026",
+        impact: "Only matching lines get cover at allocate time.",
+        problem: "TP was all-or-nothing per order.",
+        solves: "Rules Engine conditions (SKU/value/category) for selective insure." },
+      { name: "Scan to Verify", kind: "a", when: "Jan 2026",
+        impact: "Wrong SKU can’t print a label unchecked.",
+        problem: "Mis-picks → re-ships, refunds, complaints.",
+        solves: "Barcode verify before label print (manual or auto-print)." },
+    ]
+  },
+  {
+    id: 5, title: "Label & performance",
+    sub: "Label generate / download at pack bench",
+    items: [
+      { name: "Label performance Phase 1", kind: "q", when: "Q2 2026",
+        impact: "Faster labels for enterprise volume.",
+        problem: "Label latency killing pack-bench speed (Kmart/Cotton On class).",
+        solves: "Three planned Phase-1 latency fixes; quiet ship, follow-up epic split." },
+    ]
+  },
+  {
+    id: 6, title: "Track & notify",
+    sub: "Buyer journey + merchant/ops alerts",
+    items: [
+      { name: "Webhook uplift + API v3", kind: "a", when: "Oct 2025 / May 2026",
+        impact: "Events fan out to marketing/BI by state.",
+        problem: "Single endpoint; API couldn’t manage by stable ID.",
+        solves: "Multi-endpoint + filters; CRUD/test by publishable ID." },
+      { name: "Klaviyo native", kind: "a", when: "Nov 2025",
+        impact: "Transit events fuel branded journeys.",
+        problem: "Klaviyo-heavy brands hesitated without native sync.",
+        solves: "API-key connect; order/tracking/customer fields sync." },
+      { name: "AWOT self-serve", kind: "a", when: "Oct 2025",
+        impact: "Apple Wallet tracking without backend enable.",
+        problem: "Hidden behind manual enablement → low adoption.",
+        solves: "Toggle in Notifications for Branded Tracking." },
+      { name: "Company + store notification overrides", kind: "a", when: "Dec 2025 / Jun 2026",
+        impact: "HQ and stores control email/SMS/AWOT themselves.",
+        problem: "Admin flag + company lock → Support/DOS tickets.",
+        solves: "Self-serve company unlock, then per-store overrides with HQ lock/push." },
+      { name: "Shopify fulfil notify toggle", kind: "a", when: "Jul 2026",
+        impact: "No duplicate “order shipped” emails.",
+        problem: "Shippit always told Shopify to notify on fulfil.",
+        solves: "Merchant chooses whether Shopify sends that email." },
+      { name: "Branded SMS Sender IDs", kind: "q", when: "Jun–Jul 2026",
+        impact: "Correct SMS sender per merchant.",
+        problem: "Missing sender IDs risked wrong/blocked Branded SMS.",
+        solves: "Use merchant IDs when present, else fall back to “Shippit” (Chris VG)." },
+      { name: "Gmail AWOT link fix", kind: "q", when: "Jun 2026",
+        impact: "AWOT links don’t break in Gmail mobile.",
+        problem: "Gmail mishandled AWOT deep links in emails.",
+        solves: "Removed bad linking path (quiet)." },
+      { name: "BYO Get delivery help", kind: "q", when: "Jun 2026",
+        impact: "BYO buyers get help CTA parity.",
+        problem: "BYO hid help / showed dead phone+email vs Resell.",
+        solves: "Get delivery help (Intercom/DevRev) for BYO tracking." },
+      { name: "EDD on track / email / SMS", kind: "a", when: "Jul 2026",
+        impact: "Same promise surfaces post-purchase.",
+        problem: "Accurate estimate only useful if buyers see it after buy.",
+        solves: "EDD productised across track UI and notifications (with Quote/Checkout)." },
+    ]
+  },
+  {
+    id: 7, title: "Protect & claim",
+    sub: "Transit Protection through payout",
+    items: [
+      { name: "Transit Protection 2.0 (FreightSafe)", kind: "a", when: "Jan 2026",
+        impact: "Claims in days, fragile covered, self-serve.",
+        problem: "~4-week manual claims, fragile excluded, heavy support cost.",
+        solves: "Vendor swap: API policies, self-serve claims portal, 2–5 day payouts." },
+      { name: "SKU-level TP (at allocate)", kind: "a", when: "Apr 2026",
+        impact: "Enterprise covers only high-value lines.",
+        problem: "Paying to insure whole orders of low-value mix.",
+        solves: "Rules-based selective cover — cost control without dropping TP." },
+    ]
+  },
+  {
+    id: 8, title: "How we build",
+    sub: "Platform that made the pace possible",
+    items: [
+      { name: "Odin (codebase Q&A)", kind: "p", when: "Jul 2026",
+        impact: "Faster product/eng answers from live code.",
+        problem: "“How does X work?” burned wiki + engineer time.",
+        solves: "Ask-the-codebase bot with evidence and uncertainty." },
+      { name: "AI-assisted shipping (squad)", kind: "p", when: "2025–26",
+        impact: "First AI-built pages, quote mappers, faster Connect spikes.",
+        problem: "Backlog of useful small ships vs eng capacity.",
+        solves: "Cursor/Figma MCP patterns with Sandrea, Karlo, Steph, Frenchy." },
+      { name: "Chris VG API / SMS / infra jams", kind: "p", when: "ongoing",
+        impact: "Sender ID flow + API strategy for Demand.",
+        problem: "Messaging edge cases and oneshot-shipping platform gaps.",
+        solves: "Branded SMS routing live; wiki/monolith/API catchups as force multipliers." },
+    ]
+  }
+];
+
+const rail = document.getElementById("rail");
+const detail = document.getElementById("detail");
+
+function kindLabel(k) {
+  if (k === "a") return ["Announced", "a"];
+  if (k === "q") return ["Quiet", "q"];
+  return ["Platform", "p"];
+}
+
+stages.forEach((s) => {
+  const col = document.createElement("div");
+  col.className = "stage";
+  col.innerHTML = `
+    <div class="node">
+      <div class="n">${s.id}</div>
+      <h2>${s.title}</h2>
+      <div class="sub">${s.sub}</div>
+    </div>
+    <div class="cards"></div>`;
+  const cards = col.querySelector(".cards");
+  s.items.forEach((item, idx) => {
+    const [label, cls] = kindLabel(item.kind);
+    const el = document.createElement("div");
+    el.className = "card";
+    el.dataset.key = `${s.id}-${idx}`;
+    el.innerHTML = `
+      <div class="top">
+        <div class="name">${item.name}</div>
+        <span class="tag ${cls}">${label}</span>
+      </div>
+      <div class="impact">${item.impact}</div>`;
+    el.addEventListener("click", () => select(el, s, item));
+    cards.appendChild(el);
+  });
+  rail.appendChild(col);
+});
+
+function select(el, stage, item) {
+  document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+  const [label] = kindLabel(item.kind);
+  detail.className = "detail-panel";
+  detail.innerHTML = `
+    <h3>${item.name}</h3>
+    <div class="meta">${label} · ${item.when} · Journey node: <strong style="color:#e8eef6">${stage.title}</strong></div>
+    <div class="body">
+      <p><strong>At this node:</strong> ${item.impact}</p>
+      <p><strong>Problem:</strong> ${item.problem}</p>
+      <p><strong>What shipped:</strong> ${item.solves}</p>
+    </div>`;
+}
+</script>
+</body>
+</html>
